@@ -1,7 +1,7 @@
 const path = require('path')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.js')
-
+const nodeExt = require('webpack-node-externals')
 const config = {
   // Building Node bundle rather than browser
   target: 'node',
@@ -12,6 +12,7 @@ const config = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'build'),
   },
+  externals: [nodeExt()],
 }
 
 module.exports = merge(base, config)

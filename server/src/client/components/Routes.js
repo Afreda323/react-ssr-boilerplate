@@ -1,19 +1,18 @@
 import React from 'react'
-import Home from './Home'
-import UserList, { loadData } from './UserList'
+import HomePage from '../pages/HomePage'
+import UserListPage from '../pages/UserListPage'
 
 // Routes must be defined like this for
 // server rendering
 const Routes = [
   {
+    ...HomePage,
     path: '/',
     exact: true,
-    component: Home,
   },
   {
-    loadData,
+    ...UserListPage,
     path: '/users',
-    component: UserList,
   },
 ]
 

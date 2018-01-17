@@ -26,5 +26,7 @@ const stateToProps = state => ({
 // before initial page load for prepopulating store
 const loadData = store => store.dispatch(fetchUsers())
 
-export { loadData }
-export default connect(stateToProps, { fetchUsers })(UserList)
+export default {
+  loadData,
+  component: connect(stateToProps, { fetchUsers })(UserList),
+}

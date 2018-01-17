@@ -2,6 +2,7 @@ import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
+import serialize from 'serialize-javascript'
 import { renderRoutes } from 'react-router-config'
 import Routes from '../client/components/Routes'
 
@@ -13,11 +14,15 @@ export default (req, store) => {
       </StaticRouter>
     </Provider>
   )
+  const initialState = serialize(store.getState())
   return `
   <html>
     <head>
       <title>Universal React Boilerplate</title>
     </head>
+    <script>
+      window.INITIAL_STATE = ${initialState}
+    </script>
     <body>
       <div id="root">${content}</div>
       <script src="bundle.js"></script>

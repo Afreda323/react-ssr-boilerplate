@@ -21,4 +21,10 @@ class UserList extends Component {
 const stateToProps = state => ({
   users: state.users,
 })
+
+// Function that is called on server side
+// before initial page load for prepopulating store
+const loadData = store => store.dispatch(fetchUsers())
+
+export { loadData }
 export default connect(stateToProps, { fetchUsers })(UserList)

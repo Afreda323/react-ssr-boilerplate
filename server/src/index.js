@@ -4,17 +4,19 @@ import proxy from 'express-http-proxy'
 import renderer from './helpers/renderer'
 import createStore from './helpers/createStore'
 import { matchRoutes } from 'react-router-config'
-import Routes from './client/components/Routes'
+import Routes from './client/Routes'
 const app = express()
 
+// Send requests from front end 
+// directly to outside API
 app.use(
   '/api',
   proxy('http://react-ssr-api.herokuapp.com', {
-    // NOTE:
+    // NOTE: ----
     // This is specific to this API and
     // how it handles Google OAuth
     proxyReqOptDecorator(opts) {
-      opts.header['x-forwarded-host'] = 'localhost:3000'
+      opts.headers['x-forwarded-host'] = 'localhost:3000'
       return opts
     },
   })
@@ -22,7 +24,8 @@ app.use(
 app.use(express.static('public'))
 app.get('*', (req, res) => {
   // Create the initial store
-  const store = createStore()
+  // pass req so we can access cookies
+  const store = createStore(req)
   // Map over all routes that are in path
   // Look for load data function
   // Call it with the store to populate before render

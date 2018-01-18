@@ -7,7 +7,7 @@ import { matchRoutes } from 'react-router-config'
 import Routes from './client/Routes'
 const app = express()
 
-// Send requests from front end 
+// Send requests from front end
 // directly to outside API
 app.use(
   '/api',
@@ -29,11 +29,28 @@ app.get('*', (req, res) => {
   // Map over all routes that are in path
   // Look for load data function
   // Call it with the store to populate before render
-  const promises = matchRoutes(Routes, req.path).map(
-    ({ route }) => (route.loadData ? route.loadData(store) : null)
-  )
+  // force resolve all promises
+  const promises = matchRoutes(Routes, req.path)
+    .map(({ route }) => (route.loadData ? route.loadData(store) : null))
+    .map(promise => {
+      if (promise) {
+        return new Promise((resolve, reject) => {
+          promise.then(resolve).catch(resolve)
+        })
+      }
+    })
   // Once promises are fulfilled, send official render
-  Promise.all(promises).then(() => res.send(renderer(req, store)))
+  Promise.all(promises).then(() => {
+    const context = {}
+    const content = renderer(req, store, context)
+    if(context.url) {
+        return res.status(301).redirect(context.url)
+    }
+    if (context.NotFound) {
+      return res.status(404).send(content)
+    }
+    return res.send(content)
+  })
 })
 
 app.listen(3000, () => {

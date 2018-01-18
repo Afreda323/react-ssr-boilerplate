@@ -2,6 +2,8 @@ import React from 'react'
 import App from './App'
 import HomePage from './pages/HomePage'
 import UserListPage from './pages/UserListPage'
+import AdminListPage from './pages/AdminListPage'
+import NotFoundPage from './pages/NotFoundPage'
 
 // Routes must be defined like this for
 // server rendering
@@ -17,6 +19,13 @@ const Routes = [
       {
         ...UserListPage,
         path: '/users',
+      },
+      {
+        ...AdminListPage,
+        path: '/admins',
+      },
+      {
+        ...NotFoundPage,
       },
     ],
   },
